@@ -1,0 +1,28 @@
+doctype html
+html
+    head
+        meta(charset='utf-8')
+        title HC-Jam - HTML5 game
+
+        meta(name="viewport", content="width=device-width, user-scalable=no")
+
+        link(rel="stylesheet", href="https://www.w3schools.com/w3css/4/w3.css")
+        
+        style.
+            body { text-align:center; padding: 5%}
+            #center { display:inline-block; border: 3px solid black; outline: #521134 solid 10px; padding:5%; text-align: center;}
+            #GameName { font-size: 50pt; }
+            #alertForEmptyName { color:#ff0000; }
+    body    
+        div(id="center")
+            h1(id="GameName") HC Jam
+            br
+            form(action='/' method='post')
+                p
+                    input(type='text' name='userName' placeholder='userName' style='font-size: 22pt; width: 200px; height: 50px;')
+                p
+                    input(class="w3-button w3-black w3-round-large" type='submit' value='Play!' style='width: 200px; height: 45px')
+            strong(id="alertForEmptyName") #{notice}
+            h2 ver 0.9
+            h3 Update Log:
+            h4 Add Guide and About

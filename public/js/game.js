@@ -1,13 +1,18 @@
 var game;
 var sizeConfig = {
     width: 540,
-    height: 960
+    height: 960,
+    validAreaX: 0,
+    validAreaY: 0,          // (sizeConfig.height/10)*8;
+    validAreaWidth: 0,     // sizeConfig.width/4;
+    validAreaHeight: 0,    // sizeConfig.height/9;
 }
 
 var colorConfig = {
+    backgroundColor: 0x5795f7,
     title: '#ffffff',
     notice: '#ffffff',
-    startText: '#ffffff',
+    text: '#ffffff',
     note: 0xffffff, // Don't use '# 'color number
     validArea: 0x333333, // Don't use '# 'color number
     keyGuideText: '#bfbfbf',
@@ -16,9 +21,8 @@ var colorConfig = {
 
 var music;
 var musicStopFlag = false;
-var countDownTimer;
 
-var score;
+var score = 0;
 
 var notes = []
 var noteTimeTable = [ // Oasis - Don't Look Back In Anger
@@ -50,6 +54,7 @@ var noteTimeTable = [ // Oasis - Don't Look Back In Anger
                     [99000,4], [99300,4]
                     ];
 
+var httpRequest;
 
 
 // note class (rectangle)
@@ -88,7 +93,7 @@ class note extends Phaser.GameObjects.Rectangle {
             this.disappear.play();
         }
         
-        if(this.fallingFlag && this.y > sizeConfig.height+100){
+        if(this.fallingFlag && this.y > sizeConfig.height){
             notes.shift()
             this.disappear.remove();
             this.destroy();         
@@ -102,26 +107,36 @@ class note extends Phaser.GameObjects.Rectangle {
 
 
 
-
-
+//---------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 // Load Resources Scene
 class bootGame extends Phaser.Scene{
     constructor(){
         super("BootGame");
+
+        httpRequest = new XMLHttpRequest();
+        if(!httpRequest){
+            alert("Not connected to the server.")
+        }
+
     }
 
     preload(){
         // Load Assets (Images, GameMusics);        
         this.load.image("backGroundImage", "assets/noel.jpg");
+        // this.load.image("backGroundImage", "assets/album_art.jpg");
         this.load.image("home", "assets/home.png");
         this.load.image("reset", "assets/reset.png");
         this.load.image("pause", "assets/pause.png");
         this.load.audio('selectedMusic', "assets/don't_look_back_in_anger_cut_version.mp3"); 	
 
-
-
+        
         /** The process of making & running Loading Bar (Progress Bar) 
-         * This source code of the progressBar is written by https://gamedevacademy.org/creating-a-preloading-screen-in-phaser-3/ **/
+         * 
+         * This source code of the progressBar is from https://gamedevacademy.org/creating-a-preloading-screen-in-phaser-3/ 
+         * 
+         * **/
 
         // Make progressBar
         var progressBar = this.add.graphics();
@@ -194,6 +209,76 @@ class bootGame extends Phaser.Scene{
     }
 }
 
+// Guide Page
+class guide extends Phaser.Scene{
+    constructor(){
+        super("Guide");
+    }
+    preload(){
+
+    }
+    create(){
+        this.makeGuideText(sizeConfig.width/2, (sizeConfig.height/10)*1.5, "This is a Very Simple RhythmGame.");
+        this.makeGuideText(sizeConfig.width/2, (sizeConfig.height/10)*2.5, "The notes fall in time with the music.");
+        this.makeGuideText(sizeConfig.width/2, (sizeConfig.height/10)*3.25, "(Oasis - Don't Look Back In Anger)");
+        this.makeGuideText(sizeConfig.width/2, (sizeConfig.height/10)*4.75, "You have to press the Q, W, O, P.");
+        this.makeGuideText(sizeConfig.width/2, (sizeConfig.height/10)*5.75, "Or touch each screen area in time.");
+        this.makeGuideText(sizeConfig.width/2, (sizeConfig.height/10)*6.75, "Thank you for playing this game. :-)");
+    
+        var resetIcon = this.add.image((sizeConfig.width/2), (sizeConfig.height/10)*8.5, "reset");
+        resetIcon.setOrigin(0.5);
+        resetIcon.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
+            notes = [];
+            game.scene.stop('Guide');
+			game.scene.start('Title');;
+        });
+    }
+
+    makeGuideText(x, y, string){
+        let text = this.add.text(x, y, string);
+        text.setFontFamily("Helvetica");
+        text.setFontSize(28);
+        text.setColor(colorConfig.text);
+        text.setOrigin(0.5);
+        text.setDepth(2);
+    
+    }
+}
+
+// about the developer
+class about extends Phaser.Scene{
+    constructor(){
+        super("About");
+    }
+    preload(){
+
+    }
+    create(){
+        this.makeText(sizeConfig.width/2, (sizeConfig.height/10)*4.5, "Web Developer");
+        this.makeText(sizeConfig.width/2, (sizeConfig.height/10)*5.25, "Node.js / React.js / Phaser.js(ver.3)");
+        this.makeText(sizeConfig.width/2, (sizeConfig.height/10)*6, "gail5135@gmail.com");
+        this.makeText(sizeConfig.width/2, (sizeConfig.height/10)*6.75, "기프티콘은 언제나 환영이야");
+    
+        var resetIcon = this.add.image((sizeConfig.width/2), (sizeConfig.height/10)*8.25, "reset");
+        resetIcon.setOrigin(0.5);
+        resetIcon.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
+            notes = [];
+            game.scene.stop('About');
+			game.scene.start('Title');;
+        });
+    }
+
+    makeText(x, y, string){
+        let text = this.add.text(x, y, string);
+        text.setFontFamily("Helvetica");
+        text.setFontSize(28);
+        text.setColor(colorConfig.text);
+        text.setOrigin(0.5);
+        text.setDepth(2);
+    
+    }
+}
+
 // Title Page
 class title extends Phaser.Scene{
     constructor(){
@@ -202,37 +287,50 @@ class title extends Phaser.Scene{
 
     create(){
         // Make Title Text
-        var titleText = this.add.text(sizeConfig.width/2, sizeConfig.height/4, "HC Jam");
+        var titleText = this.add.text(sizeConfig.width/2, sizeConfig.height/6, "HC Jam");
         titleText.setFontSize(70);
         titleText.setColor(colorConfig.title);
         titleText.setOrigin(0.5);
 
-        // Make Game Notice Text
-        var notice = this.add.text(sizeConfig.width/2, (sizeConfig.height/4)*(2.5), "Click Start or Press Spacebar");
-        notice.setFontSize(30);
-        notice.setOrigin(0.5);
-        notice.setColor(colorConfig.notice);
-
         // Make Start Button
-        var startButton = this.add.text(sizeConfig.width/2, (sizeConfig.height/4)*3, 'Start');
-        startButton.setFontSize(50);
-        startButton.setOrigin(0.5);
-        startButton.setColor(colorConfig.startText);
-        startButton.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
-            this.scene.scene.start("PlayGame");
+        var start = this.add.text(sizeConfig.width/2, (sizeConfig.height/7)*4, 'Start');
+        start.setFontSize(50);
+        start.setOrigin(0.5);
+        start.setColor(colorConfig.text);
+        start.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
+            this.scene.scene.start("Play");
+        });
+        
+        // Make Guide Button
+        var guide = this.add.text(sizeConfig.width/2, (sizeConfig.height/7)*5, 'Guide');
+        guide.setFontSize(50);
+        guide.setOrigin(0.5);
+        guide.setColor(colorConfig.text);
+        guide.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
+            this.scene.scene.start("Guide");
+        });
+
+        // Make About Button
+        var about = this.add.text(sizeConfig.width/2, (sizeConfig.height/7)*6, 'About');
+        about.setFontSize(50);
+        about.setOrigin(0.5);
+        about.setColor(colorConfig.text);
+        about.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
+            this.scene.scene.start("About");
         });
 
         // Add Key Event for starting game
         this.input.keyboard.on('keydown-SPACE', function (event) {
-            this.scene.scene.start("PlayGame");
+            this.scene.scene.start("Play");
         });
     }
 }
 
+
 // Play MyRhythmGame Scene
-class playGame extends Phaser.Scene{
+class play extends Phaser.Scene{
     constructor(){
-        super("PlayGame");
+        super("Play");
 
         
     }
@@ -240,15 +338,17 @@ class playGame extends Phaser.Scene{
     preload(){
         this.noteTimer = 5800; // 8600
         this.noteDropFlag = 0;
+        console.log(noteTimeTable.length);
 
         sizeConfig.validAreaX = 0;
-        sizeConfig.validAreaY = (sizeConfig.height/10)*9;
+        sizeConfig.validAreaY = (sizeConfig.height/10)*8.5;
         sizeConfig.validAreaWidth = sizeConfig.width/4;
-        sizeConfig.validAreaHeight = sizeConfig.height/10;
+        sizeConfig.validAreaHeight = sizeConfig.height/7.5;
     }
     
     create(){
-        // Attach BackgroundImage        
+        // Attach BackgroundImage 
+        this.cameras.main.setBackgroundColor(Phaser.Display.Color.GetColor32(0, 0, 0, 255));       
         this.add.image(sizeConfig.width/2, sizeConfig.height/2, 'backGroundImage').setDepth(0);
 
         // Make Pause Icon
@@ -270,14 +370,14 @@ class playGame extends Phaser.Scene{
         countDown.setOrigin(0.5);
 
         // Make KeyGuide for each lines;
-        this.makeKeyGuideText("Q",(sizeConfig.width/8), (sizeConfig.height/20)*19);
-        this.makeKeyGuideText("W", (sizeConfig.width/8)*3, (sizeConfig.height/20)*19);
-        this.makeKeyGuideText("O", (sizeConfig.width/8)*5, (sizeConfig.height/20)*19);
-        this.makeKeyGuideText("P", (sizeConfig.width/8)*7, (sizeConfig.height/20)*19);
+        this.makeKeyGuideText("Q",(sizeConfig.width/8), sizeConfig.validAreaY+(sizeConfig.validAreaHeight/2));
+        this.makeKeyGuideText("W", (sizeConfig.width/8)*3, sizeConfig.validAreaY+(sizeConfig.validAreaHeight/2));
+        this.makeKeyGuideText("O", (sizeConfig.width/8)*5, sizeConfig.validAreaY+(sizeConfig.validAreaHeight/2));
+        this.makeKeyGuideText("P", (sizeConfig.width/8)*7, sizeConfig.validAreaY+(sizeConfig.validAreaHeight/2));
 
         // Make JudgeBar
         var judgeBar = [];
-            
+    
         for(let i = 0; i < 4; ++i){
             judgeBar.push(this.makeOneJudgeArea(sizeConfig.validAreaWidth * i, sizeConfig.validAreaY, sizeConfig.validAreaWidth, sizeConfig.validAreaHeight, colorConfig.validArea));
         }
@@ -291,7 +391,7 @@ class playGame extends Phaser.Scene{
         
         
         // Truly Play Game
-        countDownTimer = this.time.addEvent({
+        var countDownTimer = this.time.addEvent({
             delay: 750,   // ms
             callback: ()=>{
                 this.countDownGameStart(countDown, countDownTimer.getRepeatCount());
@@ -333,6 +433,7 @@ class playGame extends Phaser.Scene{
 
     // Drop note to the music
     dropNote(){
+        // console.log(music.isPlaying);
         if(noteTimeTable.length > this.noteDropFlag){
             if(noteTimeTable[this.noteDropFlag][0] == this.noteTimer){
                 if(noteTimeTable[this.noteDropFlag][1] === 1){
@@ -351,10 +452,9 @@ class playGame extends Phaser.Scene{
                 this.noteDropFlag++; 
             }  
         }
-        else if(this.noteTimer > 115000){
-            music.stop();
+        else if(!music.isPlaying){
             this.scene.start("GameOver");
-        } 
+        }
     }
 
 
@@ -420,14 +520,14 @@ class playGame extends Phaser.Scene{
     // Pause the Game
     pauseGame(){
         music.pause();
-        game.scene.pause("PlayGame");
-        game.scene.run("PauseGame");
+        game.scene.pause("Play");
+        game.scene.run("Pause");
     }
 
     // Judge Note 
     judgeNote(line){
         notes.forEach(element => {
-            if(element.position === line && element.y < (sizeConfig.height/10)*11 && element.y > sizeConfig.validAreaY-50){
+            if(element.position === line && (element.y < (sizeConfig.validAreaY+sizeConfig.validAreaHeight)) && (element.y > (sizeConfig.validAreaY-sizeConfig.validAreaHeight/10))){
                 console.log(`${element.time} || ${element.position}`);
                 element.stopFalling();
                 notes.shift();
@@ -457,9 +557,9 @@ class playGame extends Phaser.Scene{
 }
 
 // GamePause Scene
-class pauseGame extends Phaser.Scene{
+class pause extends Phaser.Scene{
     constructor(){
-        super("PauseGame");
+        super("Pause");
     }
     
     create(){
@@ -488,8 +588,8 @@ class pauseGame extends Phaser.Scene{
                     pauseText.setText(restartTimer.getRepeatCount()-1);
                 } 
                 else{
-                    game.scene.stop("PauseGame");
-                    game.scene.resume("PlayGame");
+                    game.scene.stop("Pause");
+                    game.scene.resume("Play");
                     music.resume();
                 }
             },
@@ -525,16 +625,49 @@ class gameOver extends Phaser.Scene{
         resetIcon.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
             notes = [];
             game.scene.stop('GameOver');
-			game.scene.start('PlayGame');;
+			game.scene.start('Play');;
         });
 
+        // Make userData of this game
+        var userData = {
+            userName: userName,
+            score: parseInt(score.text),
+            bestScore: 0,
+        } 
+
+        // Add userData in users
+        users.push(userData);
+        users.sort(function(a, b){
+            return a.score > b.score ? -1 : a.score < b.score ? 1 : 0;  
+        });
+
+        // Sort users by score
+        if(users[0].score === userData.score){
+            users[0].bestScore = 1;
+        }
+
+        
         // Show rankings
         for(let i = 0; i < 5; ++i){
-            var record = this.add.text(sizeConfig.width/2, (sizeConfig.height/20)*(15-i), "Record");
-            record.setFontSize(30);
+            var record;
+            if(users[i] !== undefined){
+                var record = this.add.text(sizeConfig.width/2, (sizeConfig.height/20)*(11+i), `${i+1}: ${users[i].userName}|${users[i].score}`);
+            }
+            else{
+                record = this.add.text(sizeConfig.width/2, (sizeConfig.height/20)*(11+i), `${i+1}: TBD`);
+            }
+            record.setFontSize(25);
             record.setColor('#ffffff');
             record.setOrigin(0.5);
         }
+
+        this.sendUserDataToServer(userData);
+    }
+
+    sendUserDataToServer(userData){
+        httpRequest.open('POST', '/result', true);
+		httpRequest.setRequestHeader('Content-Type', 'application/json');
+		httpRequest.send(JSON.stringify(userData));
     }
 }
 
@@ -542,7 +675,7 @@ class gameOver extends Phaser.Scene{
 window.onload = function () {
 	var config = {
 		type: Phaser.AUTO,
-		backgroundColor: 0x123456,
+		backgroundColor: colorConfig.backgroundColor,
         scale: {
             mode: Phaser.Scale.FIT,
             autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -556,7 +689,7 @@ window.onload = function () {
 				debug: false
 			}
 		},
-		scene: [bootGame, title, playGame, pauseGame, gameOver]
+		scene: [bootGame, title, guide, about, play, pause, gameOver]
 	};
     game = new Phaser.Game(config);
 	// window.resize();
