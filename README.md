@@ -21,7 +21,7 @@
 
 ## 2. 개요
  - **Phaser.js(ver.3)** 로 개발된 **간단한 웹 리듬 게임**입니다. 한곡의 노래를 1절만 플레이할 수 있습니다.
- - This is **Simple Web Rhythm Game**
+ - This is a **Simple Web Rhythm Game** developed as a phaser.js(ver.3).
 
 
 ## 3. 사용법
