@@ -49,10 +49,30 @@
 
 
 ## 4. 실행 사진
-### 4.1. 메인 화면
- ![main](url)
+### 4.1. Login 화면
+ ![login](./screenshot/login.png)
  -------------
 
-### 4.2. 검색 화면
- ![main](url)
-
+### 4.2. Title 화면
+ ![title](./screenshot/title.png)
+ -------------
+ 
+### 4.2. Guide 화면
+ ![guide](./screenshot/guide.png)
+ -------------
+ 
+### 4.2. About 화면
+ ![about](./screenshot/about.png)
+ -------------
+ 
+### 4.2. Play 화면
+ ![play](./screenshot/play.png)
+ -------------
+ 
+### 4.2. pause 화면
+ ![pause](./screenshot/pause.png)
+ -------------
+ 
+### 4.2. gameOver 화면
+ ![gameOver](./screenshot/gameOver.png)
+ -------------
