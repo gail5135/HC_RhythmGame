@@ -21,12 +21,12 @@
 
 
 ## 2. 개요
- - 간단한 웹 리듬 게임입니다. 한곡의 노래를 1절만 플레이할 수 있습니다.
+ - **Phaser.js(ver.3)** 로 개발된 **간단한 웹 리듬 게임**입니다. 한곡의 노래를 1절만 플레이할 수 있습니다.
  - This is **Simple Web Rhythm Game**
 
 
 ## 3. 사용법
-### 3.1. 개발 언어
+### 3.1. 개발 언어 & 기술
 - Language & Framework : Node.js / Phaser.js(ver.3)
 - DB : MySQL
 
@@ -57,22 +57,22 @@
  ![title](./screenshot/title.png)
  -------------
  
-### 4.2. Guide 화면
+### 4.3. Guide 화면
  ![guide](./screenshot/guide.png)
  -------------
  
-### 4.2. About 화면
+### 4.4. About 화면
  ![about](./screenshot/about.png)
  -------------
  
-### 4.2. Play 화면
+### 4.5. Play 화면
  ![play](./screenshot/play.png)
  -------------
  
-### 4.2. pause 화면
+### 4.6. pause 화면
  ![pause](./screenshot/pause.png)
  -------------
  
-### 4.2. gameOver 화면
+### 4.7. gameOver 화면
  ![gameOver](./screenshot/gameOver.png)
  -------------
