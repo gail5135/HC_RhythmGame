@@ -16,8 +16,8 @@ app.get('/', (req, res) => {
 
 // DB Connection
 const db_connection = mysql.createConnection({
-    // host: "aauq1m86k7chmy.cfrds4g1yqyo.ap-northeast-2.rds.amazonaws.com",
-    host: "localhost",
+    host: "aa1emmlru4ealo0.cfrds4g1yqyo.ap-northeast-2.rds.amazonaws.com",
+    // host: "localhost",
     user: "root",
     password: "good5135",
     database: "rhythmGame_data",

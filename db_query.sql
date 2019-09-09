@@ -7,5 +7,6 @@ create table score_data(
 );
 
 insert into score_data(userName, score, bestScore, recordDate) values("NICE", 100, 0, NOW());
-insert into score_data(userName, score, bestScore, recordDate) values("GOOD", 360, 1, NOW());
+insert into score_data(userName, score, bestScore, recordDate) values("GOOD", 360, 0, NOW());
 insert into score_data(userName, score, bestScore, recordDate) values("very", 50, 0, NOW());
+insert into score_data(userName, score, bestScore, recordDate) values("very", 510, TRUE, NOW());
