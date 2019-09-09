@@ -57,22 +57,14 @@
  ![title](./screenshot/title.png)
  -------------
  
-### 4.3. Guide 화면
- ![guide](./screenshot/guide.png)
- -------------
- 
-### 4.4. About 화면
- ![about](./screenshot/about.png)
- -------------
- 
-### 4.5. Play 화면
+### 4.3. Play 화면
  ![play](./screenshot/play.png)
  -------------
  
-### 4.6. pause 화면
+### 4.4. pause 화면
  ![pause](./screenshot/pause.png)
  -------------
  
-### 4.7. gameOver 화면
+### 4.5. gameOver 화면
  ![gameOver](./screenshot/gameOver.png)
  -------------
