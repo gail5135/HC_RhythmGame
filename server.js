@@ -16,10 +16,10 @@ app.get('/', (req, res) => {
 
 // DB Connection
 const db_connection = mysql.createConnection({
-    // host: "aa1emmlru4ealo0.cfrds4g1yqyo.ap-northeast-2.rds.amazonaws.com",
     host: "localhost",
-    user: "root",
-    password: "good5135",
+    // Please input your MySQL user & password value
+    user: "",
+    password: "",
     database: "rhythmGame_data",
 });
 
